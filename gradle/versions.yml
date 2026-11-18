@@ -1,0 +1,13 @@
+_default: &default
+  java: 25
+  paperApi: '{version}.build.+'
+  apiVersion: '{version}'
+
+1.21.11:
+  java: 21
+  paperApi: '{version}-R0.1-SNAPSHOT'
+  apiVersion: '{version}'
+
+26.1.2: *default
+26.2: *default
+26.3: *default
