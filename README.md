@@ -14,7 +14,7 @@ A content creation plugin for PaperMC utilizing YAML configurations and Kotlin s
 - Entities with scriptable AI goals with [FreeMinecraftModels](https://modrinth.com/plugin/free-minecraft-models) Compatibility
 - Particle templates (INCOMPLETE)
 - Custom chat glyphs/gui glyphs
-- Resource pack generation for sounds, lang, and atlases
+- sounds, lang, an soon even more!
 
 ---
 
