@@ -1,0 +1,57 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="built-on" content="2026-11-18T23:51:15.3121458"><title>Goals | Blueprint</title><script type="application/json" id="virtual-toc-data">[{"id":"file-structure","level":0,"title":"File Structure","anchor":"#file-structure"},{"id":"kotlin-scripting","level":0,"title":"Kotlin Scripting","anchor":"#kotlin-scripting"},{"id":"applying-goals-to-entities","level":0,"title":"Applying Goals to Entities","anchor":"#applying-goals-to-entities"},{"id":"scriptedgoallogic-methods","level":0,"title":"ScriptedGoalLogic Methods","anchor":"#scriptedgoallogic-methods"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.26.0-b913/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Goals | Blueprint"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Blueprint Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/goals.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Goals | Blueprint"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/goals.html#webpage",
+    "url": "writerside-documentation/goals.html",
+    "name": "Goals | Blueprint",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Blueprint Help"
+}</script><!-- End Schema.org --></head><body data-id="goals" data-main-title="Goals" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs="Content"><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Blueprint  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="goals" id="goals.md">Goals</h1><p id="-wtbbww_4">Goals dictate the AI behaviors of your custom entities (e.g., finding a target, wandering, attacking). Blueprint registers goals globally, allowing multiple entity types to reference and share the same goal.</p><section class="chapter"><h2 id="file-structure" data-toc="file-structure">File Structure</h2><p id="-wtbbww_9">Goals are strictly defined using Kotlin scripts.</p><p id="-wtbbww_10"><code class="code" id="-wtbbww_11">plugins/Blueprint/content/&lt;namespace&gt;/data/goals/&lt;goal_id&gt;.kts</code></p></section><section class="chapter"><h2 id="kotlin-scripting" data-toc="kotlin-scripting">Kotlin Scripting</h2><p id="-wtbbww_12">The script uses an injected <code class="code" id="-wtbbww_14">goal</code> function that takes a name, a list of <code class="code" id="-wtbbww_15">GoalType</code> flags (which prevent conflicting goals from running simultaneously), and the logic block. The script must return the result of this <code class="code" id="-wtbbww_16">goal</code> function.</p><div class="code-block" data-lang="kotlin">
+import com.destroystokyo.paper.entity.ai.GoalType
+import com.github.darksoulq.blueprint.core.scripting.api.ScriptedGoalLogic
+import org.bukkit.entity.Mob
+
+goal(&quot;custom_wander&quot;, GoalType.RANDOM_WANDER) { mob -&gt;
+    object : ScriptedGoalLogic {
+        
+        override fun shouldActivate(): Boolean {
+            // Logic to determine if the goal should start
+            return mob.random.nextDouble() &lt; 0.05
+        }
+
+        override fun shouldStayActive(): Boolean {
+            // Logic to determine if a running goal should continue
+            return !mob.navigation.isDone
+        }
+
+        override fun start() {
+            // Called when the goal activates
+            val loc = mob.location.add(
+                (mob.random.nextDouble() - 0.5) * 10,
+                0.0,
+                (mob.random.nextDouble() - 0.5) * 10
+            )
+            mob.navigation.moveTo(loc, 1.0)
+        }
+
+        override fun tick() {
+            // Called every tick while the goal is active
+        }
+
+        override fun stop() {
+            // Called when the goal is interrupted or finishes
+            mob.navigation.stopPathfinding()
+        }
+    }
+}
+</div></section><section class="chapter"><h2 id="applying-goals-to-entities" data-toc="applying-goals-to-entities">Applying Goals to Entities</h2><p id="-wtbbww_17">Once defined, you reference the goal in your entity's YAML configuration using its ID (prepended with a <code class="code" id="-wtbbww_19">#</code>). If your script is named <code class="code" id="-wtbbww_20">goal.kts</code>, its reference is <code class="code" id="-wtbbww_21">#namespace:goal</code>.</p><div class="code-block" data-lang="yaml">
+goals:
+  &quot;#namespace:goal&quot;: 1
+</div></section><section class="chapter"><h2 id="scriptedgoallogic-methods" data-toc="scriptedgoallogic-methods">ScriptedGoalLogic Methods</h2><ul class="list _bullet" id="-wtbbww_22"><li class="list__item" id="-wtbbww_23"><p id="-wtbbww_30"><span class="control" id="-wtbbww_31"><code class="code" id="-wtbbww_32">shouldActivate()</code></span>: (Required) Returns true if the goal should begin executing.</p></li><li class="list__item" id="-wtbbww_24"><p id="-wtbbww_33"><span class="control" id="-wtbbww_34"><code class="code" id="-wtbbww_36">shouldStayActive()</code></span>: Returns true if an active goal should keep running. Defaults to <code class="code" id="-wtbbww_35">shouldActivate()</code>.</p></li><li class="list__item" id="-wtbbww_25"><p id="-wtbbww_37"><span class="control" id="-wtbbww_38"><code class="code" id="-wtbbww_39">start()</code></span>: Executes once when the goal begins.</p></li><li class="list__item" id="-wtbbww_26"><p id="-wtbbww_40"><span class="control" id="-wtbbww_41"><code class="code" id="-wtbbww_42">tick()</code></span>: Executes every tick while the goal remains active.</p></li><li class="list__item" id="-wtbbww_27"><p id="-wtbbww_43"><span class="control" id="-wtbbww_44"><code class="code" id="-wtbbww_45">stop()</code></span>: Executes once when the goal finishes or is cancelled.</p></li><li class="list__item" id="-wtbbww_28"><p id="-wtbbww_46"><span class="control" id="-wtbbww_47"><code class="code" id="-wtbbww_49">isInterruptable()</code></span>: Returns true if another higher-priority goal can cancel this one. Defaults to <code class="code" id="-wtbbww_48">true</code>.</p></li><li class="list__item" id="-wtbbww_29"><p id="-wtbbww_50"><span class="control" id="-wtbbww_51"><code class="code" id="-wtbbww_53">requiresUpdateEveryTick()</code></span>: Returns true if this goal strictly requires ticking every single server tick. Defaults to <code class="code" id="-wtbbww_52">false</code>.</p></li></ul></section><div class="last-modified">18 November 2026</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="entities.html" class="navigation-links__prev">Entities</a><a href="particles.html" class="navigation-links__next">[WIP] Particles</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.26.0-b913/app.js"></script></body></html>
