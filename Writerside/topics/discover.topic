@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Discover Blueprint" id="discover">
+
+    <section-starting-page>
+        <title>Blueprint</title>
+        <description>
+            PaperMC plugin for creating custom items, entities, and server content using YAML and Kotlin.
+        </description>
+        <spotlight>
+            <card href="items.md" summary="Custom Items.">
+            </card>
+            <card href="entities.md" summary="Custom Entities.">
+            </card>
+        </spotlight>
+        <primary>
+            <title>Features</title>
+            <card href="glyphs.md" summary="Chat Glyphs.">
+            </card>
+            <card href="language.md" summary="Language files.">
+            </card>
+            <card href="particles.md" summary="[WIP] Particle Templates.">
+            </card>
+            <card href="sounds.md" summary="Sound Registration.">
+            </card>
+        </primary>
+    </section-starting-page>
+</topic>

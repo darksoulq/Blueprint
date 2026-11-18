@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="b"
+                 name="Blueprint"
+                 start-page="discover.topic">
+
+    <toc-element topic="discover.topic"/>
+    <toc-element toc-title="Content">
+        <toc-element topic="items.md"/>
+        <toc-element topic="language.md"/>
+        <toc-element topic="glyphs.md"/>
+        <toc-element topic="entities.md"/>
+        <toc-element topic="goals.md"/>
+        <toc-element topic="particles.md"/>
+        <toc-element topic="sounds.md"/>
+    </toc-element>
+</instance-profile>
